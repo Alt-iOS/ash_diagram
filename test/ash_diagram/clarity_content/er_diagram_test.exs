@@ -39,21 +39,24 @@ defmodule AshDiagram.ClarityContent.ErDiagramTest do
     refute ErDiagram.applies?(%{}, nil)
   end
 
-  test "generates mermaid content for application" do
+  test "draws the application with Graphviz, in the page theme" do
     vertex = %Vertex.Application{app: :ash_diagram, description: "", version: ""}
-    assert {:mermaid, content} = ErDiagram.render_static(vertex, nil)
-    assert String.starts_with?(content, "erDiagram")
+    assert {:viz, content} = ErDiagram.render_static(vertex, nil)
+    assert String.starts_with?(content.(%{theme: :light}), "digraph {")
+    assert content.(%{theme: :dark}) =~ ~s(fontcolor="#f0f0f0")
   end
 
-  test "generates mermaid content for domain" do
+  test "draws the domain with Graphviz, in the page theme" do
     vertex = %Domain{domain: AshDiagram.Flow.Domain}
-    assert {:mermaid, content} = ErDiagram.render_static(vertex, nil)
-    assert String.starts_with?(content, "erDiagram")
+    assert {:viz, content} = ErDiagram.render_static(vertex, nil)
+    assert String.starts_with?(content.(%{theme: :light}), "digraph {")
+    assert content.(%{theme: :dark}) =~ ~s(fontcolor="#f0f0f0")
   end
 
-  test "generates mermaid content for resource" do
+  test "draws the resource with Graphviz, in the page theme" do
     vertex = %Resource{resource: User}
-    assert {:mermaid, content} = ErDiagram.render_static(vertex, nil)
-    assert String.starts_with?(content, "erDiagram")
+    assert {:viz, content} = ErDiagram.render_static(vertex, nil)
+    assert String.starts_with?(content.(%{theme: :light}), "digraph {")
+    assert content.(%{theme: :dark}) =~ ~s(fontcolor="#f0f0f0")
   end
 end

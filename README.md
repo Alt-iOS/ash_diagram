@@ -86,6 +86,8 @@ File.write!("diagram.png", png_data)
 
 AshDiagram includes a [`clarity`](https://hex.pm/packages/clarity) introspector that automatically generates diagrams for your Ash applications.
 
+Clarity draws the architecture, class and entity relationship diagrams with Graphviz (`AshDiagram.Graphviz`), which lays out an application of a few hundred resources in about a second. A domain's or resource's diagram names the resources it relates to elsewhere as outside it.
+
 ### Renderer Configuration
 
 AshDiagram automatically detects and uses available renderers. You can configure a specific renderer in your application config:

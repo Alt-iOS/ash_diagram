@@ -33,17 +33,23 @@ with {:module, Clarity.Content} <- Code.ensure_loaded(Clarity.Content) do
     def render_static(%Vertex.Application{app: app}, _lens) do
       [app]
       |> Architecture.for_applications(show_private?: true)
-      |> AshDiagram.C4.compose()
-      |> IO.iodata_to_binary()
-      |> then(&{:mermaid, &1})
+      |> graphviz()
     end
 
     def render_static(%Domain{domain: domain}, _lens) do
       [domain]
       |> Architecture.for_domains(show_private?: true)
-      |> AshDiagram.C4.compose()
-      |> IO.iodata_to_binary()
-      |> then(&{:mermaid, &1})
+      |> graphviz()
+    end
+
+    # Graphviz lays out hundreds of resources in about a second; Mermaid took
+    # far longer, and stacked them out of reach.
+    @spec graphviz(diagram :: AshDiagram.t()) :: Clarity.Content.static_content()
+    defp graphviz(diagram) do
+      {:viz,
+       fn %{theme: theme} ->
+         diagram |> AshDiagram.Graphviz.compose(theme: theme) |> IO.iodata_to_binary()
+       end}
     end
   end
 end
